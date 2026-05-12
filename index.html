@@ -673,16 +673,18 @@ document.addEventListener('keydown', e => {
 
 // 4. Détection sortie de page (visibilité) + changement de fenêtre
 let tabSwitchCount = 0;
+let tabReturnCount = 0;
 
 function showFocusOverlay() {
   if (submitted) return;
   tabSwitchCount++;
   document.getElementById('warn-count').textContent =
-    `Incident(s) enregistré(s) : ${tabSwitchCount}`;
+    `Sorties enregistrées : ${tabSwitchCount} | Retours enregistrés : ${tabReturnCount}`;
   document.getElementById('focus-overlay').classList.add('show');
 }
 
 function closeFocusOverlay() {
+  tabReturnCount++;
   document.getElementById('focus-overlay').classList.remove('show');
 }
 
@@ -796,7 +798,9 @@ function submitExam(auto = false) {
     prenom:    prenom || '(Non renseigné)',
     matricule: matricule || '(Non renseigné)',
     reponses,
-    auto
+    auto,
+    sorties:   tabSwitchCount,
+    retours:   tabReturnCount
   });
 }
 
@@ -810,7 +814,7 @@ function autoSubmit() {
 /* ════════════════════════════════════════
    EMAIL
 ════════════════════════════════════════ */
-async function sendResults({ nom, prenom, matricule, reponses, auto }) {
+async function sendResults({ nom, prenom, matricule, reponses, auto, sorties, retours }) {
   const statusEl = document.getElementById('email-status');
   statusEl.className = 'email-status sending';
   statusEl.textContent = '⏳ Envoi des réponses au département…';
@@ -828,7 +832,9 @@ async function sendResults({ nom, prenom, matricule, reponses, auto }) {
       module:    'Télédétection Avancée — Master 1',
       reponses,
       date:      dateStr,
-      incidents: tabSwitchCount > 0 ? `⚠ ${tabSwitchCount} sortie(s) de page détectée(s)` : 'Aucun incident',
+      incidents: sorties > 0
+        ? `⚠ ${sorties} sortie(s) de page | ${retours} retour(s) sur la page`
+        : 'Aucun incident',
       soumission: auto ? 'Automatique (temps écoulé)' : 'Manuelle'
     });
     statusEl.className = 'email-status success';
