@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examen Final — Télédétection Avancée | Master 1 Géodésie & Cartographie</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Literata:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  :root {
+    --ink: #0a0f1e;
+    --paper: #f5f0e8;
+    --accent: #1a3a8f;
+    --accent2: #c8401a;
+    --rule: #c4bfb0;
+    --highlight: #e8dfc8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* Bloquer la sélection de texte partout sauf dans les zones de réponse */
+  body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+  textarea, input {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+  }
+
+  @media print {
+    .no-print { display: none !important; }
+    body { background: white; }
+    .exam-wrapper { max-width: 100%; padding: 0; }
+    .sticky-bar { display: none !important; }
+  }
+
+  body {
+    font-family: 'Literata', Georgia, serif;
+    background: #ddd8cc;
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 27px,
+      rgba(180,170,150,0.3) 27px, rgba(180,170,150,0.3) 28px
+    );
+    min-height: 100vh;
+    color: var(--ink);
+    padding: 2rem 1rem 6rem;
+  }
+
+  .exam-wrapper { max-width: 860px; margin: 0 auto; }
+
+  /* ── HEADER ── */
+  .exam-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.5rem 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0;
+  }
+  .exam-header::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 8px,
+      rgba(26,58,143,0.15) 8px, rgba(26,58,143,0.15) 9px);
+  }
+  .header-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    position: relative; z-index: 1;
+    margin-bottom: 1.5rem; padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(245,240,232,0.2);
+  }
+  .uni-info {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.08em; line-height: 1.8; opacity: 0.75; text-transform: uppercase;
+  }
+  .exam-meta {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+    text-align: right; line-height: 1.8; opacity: 0.75;
+  }
+  .exam-title { position: relative; z-index: 1; }
+  .exam-title h1 {
+    font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.4rem;
+  }
+  .exam-title h1 span { color: #6ab0ff; }
+  .exam-title .subtitle {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+    letter-spacing: 0.12em; opacity: 0.7; text-transform: uppercase;
+  }
+  .score-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.2rem;
+    background: var(--accent2); color: white; padding: 0.4rem 1rem;
+    font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em;
+  }
+
+  /* ── INSTRUCTIONS ── */
+  .instructions {
+    background: var(--highlight); border-left: 4px solid var(--accent);
+    padding: 1rem 1.5rem; font-size: 0.88rem; line-height: 1.7;
+    border-top: none; margin-bottom: 2rem; position: relative;
+  }
+  .instructions::before {
+    content: '⚠ CONSIGNES — SUJET DE NIVEAU AVANCÉ';
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.15em; color: var(--accent); display: block; font-weight: 600; margin-bottom: 0.5rem;
+  }
+  .instructions ul { padding-left: 1.2rem; }
+  .instructions li { margin-bottom: 0.3rem; }
+
+  /* ── STUDENT FORM ── */
+  .student-form {
+    background: var(--paper); border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent); padding: 1.2rem 1.6rem; margin-bottom: 2rem;
+  }
+  .student-form::before {
+    content: 'INFORMATIONS ÉTUDIANT';
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.15em; color: var(--accent); display: block; font-weight: 600; margin-bottom: 0.9rem;
+  }
+  .student-form-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem;
+  }
+  @media (max-width: 600px) { .student-form-grid { grid-template-columns: 1fr; } }
+  .field-group { display: flex; flex-direction: column; gap: 0.3rem; }
+  .field-group label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.1em; color: #666; text-transform: uppercase;
+  }
+  .field-group input {
+    border: 1px solid var(--rule); background: white; padding: 0.5rem 0.7rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; color: var(--ink);
+    outline: none; transition: border-color 0.15s;
+  }
+  .field-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(26,58,143,0.08); }
+  .field-group input.error { border-color: var(--accent2); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+    padding: 0.3rem 0; border-bottom: 2px solid var(--accent);
+    margin-bottom: 1.2rem; margin-top: 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .section-label span { font-family: 'IBM Plex Mono', monospace; color: var(--accent2); font-size: 0.68rem; }
+
+  /* ── QUESTION GROUPS ── */
+  .question-group {
+    background: var(--paper); border: 1px solid var(--rule);
+    padding: 1.4rem 1.6rem 1.2rem; margin-bottom: 1rem;
+    position: relative; transition: box-shadow 0.2s;
+  }
+  .question-group:hover { box-shadow: 4px 4px 0 var(--accent); }
+  .q-header { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 1rem; }
+  .q-number-badge {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em;
+    color: white; background: var(--accent); padding: 0.2rem 0.6rem; white-space: nowrap; flex-shrink: 0;
+  }
+  .q-title { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .q-pts {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--accent2);
+    font-weight: 500; white-space: nowrap; flex-shrink: 0; margin-left: auto;
+  }
+  .sub-question { margin-bottom: 1.2rem; padding-left: 1rem; border-left: 2px solid var(--rule); }
+  .sub-question:last-child { margin-bottom: 0; }
+  .sub-q-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--accent2);
+    letter-spacing: 0.1em; margin-bottom: 0.4rem; text-transform: uppercase;
+  }
+  .sub-q-text { font-size: 0.9rem; line-height: 1.65; color: var(--ink); margin-bottom: 0.6rem; }
+  .sub-q-text strong { font-weight: 600; }
+
+  .answer-area {
+    width: 100%; min-height: 100px; border: 1px solid var(--rule);
+    background: white; padding: 0.6rem 0.8rem;
+    font-family: 'Literata', Georgia, serif; font-size: 0.88rem; color: var(--ink);
+    resize: vertical; outline: none; transition: border-color 0.15s; line-height: 1.6;
+  }
+  .answer-area:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(26,58,143,0.08); }
+  .answer-area:disabled { background: #f0f0f0; color: #999; cursor: not-allowed; }
+
+  /* Matrix table */
+  .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 0.8rem 0; font-family: 'IBM Plex Mono', monospace; }
+  .matrix-table th { background: var(--accent); color: white; padding: 0.4rem 0.6rem; text-align: center; font-weight: 600; font-size: 0.72rem; }
+  .matrix-table td { border: 1px solid var(--rule); padding: 0.4rem 0.6rem; text-align: center; background: white; }
+  .matrix-table tr:first-child td { background: #eef2ff; font-weight: 600; }
+
+  /* Context box */
+  .context-box {
+    background: #eef2ff; border: 1px solid #b0c4f5; border-left: 4px solid var(--accent);
+    padding: 1rem 1.2rem; margin-bottom: 1rem; font-size: 0.85rem; line-height: 1.7;
+  }
+  .context-box::before {
+    content: 'CONTEXTE'; font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.15em; color: var(--accent); display: block; font-weight: 600; margin-bottom: 0.5rem;
+  }
+  .context-box ul { padding-left: 1.2rem; margin-top: 0.4rem; }
+  .context-box li { margin-bottom: 0.2rem; }
+
+  /* ── FOOTER / SUBMIT ── */
+  .exam-footer {
+    background: var(--paper); border: 1px solid var(--rule); padding: 2rem 2rem 1.8rem;
+    margin-top: 2rem; display: flex; flex-direction: column; align-items: center; gap: 1.2rem;
+  }
+  .footer-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.15em;
+    color: var(--accent); font-weight: 600; text-transform: uppercase; align-self: flex-start;
+  }
+  .footer-note {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: #777;
+    letter-spacing: 0.05em; text-align: center;
+  }
+  .btn-submit {
+    background: var(--accent); color: white; border: none;
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+    letter-spacing: 0.08em; padding: 1rem 3rem; cursor: pointer; text-transform: uppercase;
+    transition: background 0.2s, transform 0.1s; display: flex; align-items: center; gap: 0.6rem;
+  }
+  .btn-submit:hover { background: #0f276e; transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { background: #8898c4; cursor: not-allowed; transform: none; }
+
+  /* ── EMAIL STATUS ── */
+  .email-status {
+    display: none; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+    letter-spacing: 0.06em; padding: 0.7rem 1.4rem; border: 1px solid;
+    text-align: center; max-width: 480px; width: 100%;
+  }
+  .email-status.sending { color: var(--accent); border-color: var(--accent); background: #eef2ff; display: block; }
+  .email-status.success { color: #1a6b3a; border-color: #1a6b3a; background: #f0faf4; display: block; }
+  .email-status.error   { color: var(--accent2); border-color: var(--accent2); background: #fff5f3; display: block; }
+
+  /* ── CONFIRMATION PANEL ── */
+  .confirm-panel { display: none; width: 100%; text-align: center; padding: 1rem 0; }
+  .confirm-panel.show { display: block; }
+  .confirm-title { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+  .confirm-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.08em; color: #555; text-transform: uppercase; }
+
+  /* ── OVERLAY SORTIE DE PAGE ── */
+  .focus-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(10,15,30,0.96); z-index: 9999;
+    flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.2rem; text-align: center; padding: 2rem;
+  }
+  .focus-overlay.show { display: flex; }
+  .focus-overlay h2 {
+    font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800;
+    color: #f5f0e8; letter-spacing: -0.02em;
+  }
+  .focus-overlay p {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: #aaa;
+    letter-spacing: 0.05em; max-width: 420px; line-height: 1.7;
+  }
+  .focus-overlay .warn-count {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+    color: #ff4d4d; letter-spacing: 0.1em;
+  }
+  .focus-overlay button {
+    background: var(--accent2); color: white; border: none;
+    font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700;
+    letter-spacing: 0.08em; padding: 0.8rem 2rem; cursor: pointer;
+    text-transform: uppercase; transition: background 0.2s;
+  }
+  .focus-overlay button:hover { background: #a03015; }
+
+  /* ── STICKY BAR ── */
+  .sticky-bar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--ink); color: var(--paper);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.6rem 2rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.05em; z-index: 100;
+  }
+  .sticky-progress {
+    height: 3px; background: #6ab0ff; position: absolute; top: 0; left: 0;
+    transition: width 0.3s ease; width: 0%;
+  }
+  .sticky-timer {
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.85rem; font-weight: 500; letter-spacing: 0.08em;
+    color: #6ab0ff; transition: color 0.3s;
+  }
+  .sticky-timer.warn { color: #f5a623; }
+  .sticky-timer.danger { color: #ff4d4d; animation: pulse-timer 1s infinite; }
+  @keyframes pulse-timer { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+  .closing-banner {
+    background: var(--ink); color: var(--paper); text-align: center;
+    padding: 1rem 2rem; margin-top: 2rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── EMAILJS CONFIG ── -->
+<script>
+const EMAILJS_PUBLIC_KEY  = 'Zm2nvnbe_bufRA__r';
+const EMAILJS_SERVICE_ID  = 'service_89yte2b';
+const EMAILJS_TEMPLATE_ID = 'template_ixbo7yt';
+const DEST_EMAIL          = 'dep.geophysique.usthb@gmail.com';
+
+window.addEventListener('load', () => {
+  if (typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
+});
+</script>
+
+<!-- ── OVERLAY SORTIE DE PAGE ── -->
+<div class="focus-overlay" id="focus-overlay">
+  <h2>⚠ Quitter l'examen est interdit</h2>
+  <p>Vous avez quitté la fenêtre de l'examen. Cet incident est enregistré.<br>
+  Revenez immédiatement sur la page pour continuer.</p>
+  <div class="warn-count" id="warn-count"></div>
+  <button onclick="closeFocusOverlay()">Retourner à l'examen</button>
+</div>
+
+<div class="exam-wrapper">
+
+  <!-- HEADER -->
+  <div class="exam-header">
+    <div class="header-top">
+      <div class="uni-info">
+        Université — Département de Géodésie & Cartographie<br>
+        Année universitaire 2024–2025<br>
+        Master 1 — Géodésie et Cartographie
+      </div>
+      <div class="exam-meta">
+        Durée : 1h 30 min<br>
+        Documents : non autorisés<br>
+        Calculatrice : autorisée
+      </div>
+    </div>
+    <div class="exam-title">
+      <h1>Télédétection <span>&amp; Traitement</span><br>d'Images Satellitaires</h1>
+      <div class="subtitle">Examen Final — Niveau Avancé — Master 1</div>
+      <div class="score-badge">🛰 Noté sur 20 points</div>
+    </div>
+  </div>
+
+  <!-- INSTRUCTIONS -->
+  <div class="instructions">
+    <ul>
+      <li>Ce sujet comporte des questions de <strong>synthèse, de calcul et d'analyse critique</strong>. Les réponses doivent être argumentées et rigoureuses.</li>
+      <li>Les <strong>formules mathématiques</strong> doivent être justifiées.</li>
+      <li>Toute réponse non justifiée sera pénalisée.</li>
+      <li><strong>Documents et équipements électroniques</strong> strictement interdits.</li>
+      <li>Le copier-coller est <strong>désactivé</strong>. Toute sortie de la page est <strong>enregistrée et signalée</strong>.</li>
+      <li>À la fin du temps imparti, l'examen est <strong>soumis automatiquement</strong>.</li>
+    </ul>
+  </div>
+
+  <!-- STUDENT INFO -->
+  <div class="student-form no-print">
+    <div class="student-form-grid">
+      <div class="field-group">
+        <label for="student-nom">Nom</label>
+        <input type="text" id="student-nom" placeholder="Votre nom" autocomplete="family-name">
+      </div>
+      <div class="field-group">
+        <label for="student-prenom">Prénom</label>
+        <input type="text" id="student-prenom" placeholder="Votre prénom" autocomplete="given-name">
+      </div>
+      <div class="field-group">
+        <label for="student-matricule">N° Matricule</label>
+        <input type="text" id="student-matricule" placeholder="Ex : 202312345">
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ PARTIE I ══ -->
+  <div class="section-label">
+    Partie I — Physique du rayonnement et acquisition <span>6 pts</span>
+  </div>
+
+  <!-- Q1 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q1</div>
+      <div class="q-title">Rayonnement électromagnétique et interaction avec l'atmosphère</div>
+      <div class="q-pts">2,5 pts</div>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">En partant de la <strong>loi de Planck</strong>, exprimez la luminance spectrale d'un corps noir <em>B(λ,T)</em> et déduisez la <strong>loi de Stefan-Boltzmann</strong>. Interprétez physiquement le résultat en termes de télédétection thermique.</div>
+      <textarea class="answer-area" id="q1a" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">Définissez la <strong>réflectance de surface (ρ)</strong>, la <strong>transmittance atmosphérique (τ)</strong> et la <strong>luminance de chemin (L<sub>path</sub>)</strong>. Écrivez l'équation de transfert radiatif simplifiée reliant la luminance mesurée au capteur <em>L<sub>capteur</sub></em> à ces grandeurs.</div>
+      <textarea class="answer-area" id="q1b" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">c)</div>
+      <div class="sub-q-text">Expliquez la différence entre la correction atmosphérique de type <strong>DOS (Dark Object Subtraction)</strong> et la méthode <strong>MODTRAN</strong>. Quelles sont les limites de chaque approche ?</div>
+      <textarea class="answer-area" id="q1c" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q2</div>
+      <div class="q-title">Géométrie d'acquisition et résolution</div>
+      <div class="q-pts">1,5 pts</div>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">Un satellite en orbite héliosynchrone à <strong>705 km d'altitude</strong> dispose d'un capteur avec un angle de demi-champ (IFOV) de <strong>42,5 μrad</strong>. Calculez la <strong>résolution spatiale au nadir</strong> (en mètres). Que devient cette résolution pour un <strong>angle de visée hors-nadir de 20°</strong> ?</div>
+      <textarea class="answer-area" id="q2a" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">Définissez et comparez les <strong>résolutions spatiale, spectrale, radiométrique et temporelle</strong>. Pourquoi existe-t-il un <strong>compromis (trade-off)</strong> entre ces résolutions dans la conception d'un capteur ?</div>
+      <textarea class="answer-area" id="q2b" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q3</div>
+      <div class="q-title">Signatures spectrales</div>
+      <div class="q-pts">2 pts</div>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">Tracez et annotez <strong>schématiquement</strong> les courbes de réflectance spectrale de la <em>végétation saine</em>, du <em>sol nu</em> et de l'<em>eau claire</em> entre <strong>400 nm et 2500 nm</strong>. Identifiez et expliquez les mécanismes physiques responsables des principales caractéristiques (<em>red edge</em>, absorption chlorophyllienne, bandes d'eau…).</div>
+      <textarea class="answer-area" id="q3a" placeholder="Votre réponse ici… (décrivez le schéma ou réalisez-le sur papier séparé en le mentionnant)" rows="8"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">Comment la <strong>teneur en eau foliaire (Leaf Water Content)</strong> affecte-t-elle la réflectance dans le MIR (1400–2500 nm) ? Quelle conséquence pratique cela a-t-il pour la <strong>détection du stress hydrique</strong> ?</div>
+      <textarea class="answer-area" id="q3b" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ PARTIE II ══ -->
+  <div class="section-label">
+    Partie II — Traitements numériques et indices spectraux <span>7 pts</span>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q4</div>
+      <div class="q-title">Indices de végétation et biais radiométriques</div>
+      <div class="q-pts">2 pts</div>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">Donnez les formules du <strong>NDVI, SAVI, EVI</strong> et <strong>NDWI</strong>. Pour chaque indice, précisez dans quel contexte il est préférable de l'utiliser.</div>
+      <textarea class="answer-area" id="q4a" placeholder="Votre réponse ici…" rows="7"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">Un pixel végétalisé présente les réflectances suivantes (après correction atmosphérique) : <strong>ρ<sub>rouge</sub> = 0,08 ; ρ<sub>PIR</sub> = 0,45 ; ρ<sub>bleu</sub> = 0,04 ; ρ<sub>MIR</sub> = 0,22</strong>.<br>Calculez le <strong>NDVI</strong>, l'<strong>EVI</strong> (G=2,5 ; C1=6 ; C2=7,5 ; L=1) et le <strong>NDWI</strong> (McFeeters). Commentez les valeurs obtenues.</div>
+      <textarea class="answer-area" id="q4b" placeholder="Votre réponse ici…" rows="7"></textarea>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q5</div>
+      <div class="q-title">Classification supervisée et non supervisée</div>
+      <div class="q-pts">2,5 pts</div>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">Expliquez le principe de la classification par <strong>Maximum de Vraisemblance (Maximum Likelihood)</strong>. Quelles hypothèses statistiques sont nécessaires ? Que se passe-t-il si ces hypothèses ne sont pas vérifiées ?</div>
+      <textarea class="answer-area" id="q5a" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">Comparez les algorithmes <strong>k-means</strong> et <strong>ISODATA</strong> pour la classification non supervisée. Quel est le critère de convergence de k-means ? Que fait ISODATA de différent ?</div>
+      <textarea class="answer-area" id="q5b" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">c)</div>
+      <div class="sub-q-text">Une classification d'occupation du sol a produit la <strong>matrice de confusion</strong> suivante. Calculez la <strong>précision globale (Overall Accuracy)</strong>, la <strong>précision utilisateur</strong> et la <strong>précision producteur</strong> pour chaque classe, puis calculez le <strong>coefficient Kappa</strong>.</div>
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>Référence → / Classifié ↓</th>
+            <th>Végétation</th><th>Urbain</th><th>Eau</th><th>Sol nu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Végétation</td><td>120</td><td>8</td><td>2</td><td>10</td></tr>
+          <tr><td>Urbain</td><td>5</td><td>95</td><td>0</td><td>12</td></tr>
+          <tr><td>Eau</td><td>0</td><td>1</td><td>88</td><td>3</td></tr>
+          <tr><td>Sol nu</td><td>15</td><td>6</td><td>0</td><td>105</td></tr>
+        </tbody>
+      </table>
+      <textarea class="answer-area" id="q5c" placeholder="Votre réponse ici…" rows="7"></textarea>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q6</div>
+      <div class="q-title">Traitement des images radar (SAR)</div>
+      <div class="q-pts">2,5 pts</div>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">Expliquez le principe du <strong>Synthetic Aperture Radar (SAR)</strong>. Comment la longueur d'onde (bandes C, L, X) influence-t-elle la <strong>pénétration dans le couvert végétal</strong> et la <strong>sensibilité à l'humidité du sol</strong> ?</div>
+      <textarea class="answer-area" id="q6a" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">Définissez le phénomène de <strong>chatoiement (speckle)</strong> dans les images SAR. Citez deux méthodes de filtrage (<em>spatiale</em> et <em>multi-temporelle</em>) et comparez leurs avantages et inconvénients.</div>
+      <textarea class="answer-area" id="q6b" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">c)</div>
+      <div class="sub-q-text">L'<strong>interférométrie SAR (InSAR)</strong> utilise la différence de phase entre deux acquisitions. Écrivez l'expression de la <strong>phase interférométrique Δφ</strong> en fonction de la différence de marche optique (Δr) et la longueur d'onde (λ). Comment sépare-t-on la composante <em>topographique</em> de la composante de <em>déplacement</em> dans le <strong>DInSAR</strong> ?</div>
+      <textarea class="answer-area" id="q6c" placeholder="Votre réponse ici…" rows="7"></textarea>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ PARTIE III ══ -->
+  <div class="section-label">
+    Partie III — Analyse avancée et applications <span>7 pts</span>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q7</div>
+      <div class="q-title">Changement détection et analyse multi-temporelle</div>
+      <div class="q-pts">2 pts</div>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">Décrivez la méthode de détection de changement par <strong>Analyse en Composantes Principales (ACP) multi-temporelle (CVA — Change Vector Analysis)</strong>. Quelles informations apporte la <em>magnitude</em> et la <em>direction</em> du vecteur de changement ?</div>
+      <textarea class="answer-area" id="q7a" placeholder="Votre réponse ici…" rows="6"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">Vous disposez de deux images <strong>Sentinel-2</strong> (T1 = 2019, T2 = 2023) d'une région semi-aride. Proposez une <strong>chaîne de traitement complète</strong> pour cartographier la désertification, en justifiant le choix de chaque étape (prétraitement, indices, classification, validation).</div>
+      <textarea class="answer-area" id="q7b" placeholder="Votre réponse ici…" rows="8"></textarea>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q8</div>
+      <div class="q-title">Estimation de paramètres biophysiques</div>
+      <div class="q-pts">2 pts</div>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">Définissez le <strong>LAI (Leaf Area Index)</strong> et expliquez comment il peut être estimé par <strong>inversion de modèles de transfert radiatif</strong> (ex : PROSPECT-SAIL). Quelles sont les <strong>sources d'incertitude</strong> dans cette approche ?</div>
+      <textarea class="answer-area" id="q8a" placeholder="Votre réponse ici…" rows="6"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">La relation entre <strong>NDVI et LAI</strong> est souvent décrite par une fonction logarithmique saturant au-delà de LAI ≈ 3. Expliquez physiquement <strong>pourquoi</strong>, et proposez un indice alternatif moins sensible à cette saturation.</div>
+      <textarea class="answer-area" id="q8b" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question-group">
+    <div class="q-header">
+      <div class="q-number-badge">Q9</div>
+      <div class="q-title">Étude de cas — Analyse critique</div>
+      <div class="q-pts">3 pts</div>
+    </div>
+    <div class="context-box">
+      Un bureau d'études est chargé de surveiller l'<strong>évolution du couvert forestier</strong> dans une région montagneuse d'Algérie (wilaya de Tizi Ouzou) sur la période <strong>2000–2023</strong>. Il dispose des données suivantes :
+      <ul>
+        <li>Images <strong>Landsat 5 TM</strong> (2000, 2005), <strong>Landsat 8 OLI</strong> (2013, 2018), <strong>Sentinel-2 MSI</strong> (2019, 2023)</li>
+        <li><strong>MNT SRTM</strong> à 30 m de résolution</li>
+        <li>Données météorologiques (précipitations, températures) de la station de Tizi Ouzou</li>
+        <li><strong>150 points de terrain</strong> relevés en 2023 (GPS + observations de couverture)</li>
+      </ul>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">a)</div>
+      <div class="sub-q-text">Identifiez les principaux <strong>problèmes de cohérence inter-capteur</strong> entre Landsat 5, Landsat 8 et Sentinel-2 (résolution spatiale, résolution spectrale, étalonnage radiométrique). Comment <strong>harmonisez-vous</strong> ces données pour une analyse cohérente sur 23 ans ?</div>
+      <textarea class="answer-area" id="q9a" placeholder="Votre réponse ici…" rows="6"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">b)</div>
+      <div class="sub-q-text">Proposez et justifiez un <strong>indice composite adapté à la cartographie forestière</strong> en zone méditerranéenne semi-aride, en tenant compte des <strong>effets topographiques</strong> (illumination différentielle sur versants).</div>
+      <textarea class="answer-area" id="q9b" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">c)</div>
+      <div class="sub-q-text">Comment utilisez-vous les <strong>150 points terrain</strong> pour valider statistiquement votre classification finale ? Quelle <strong>taille d'échantillon minimale</strong> recommandez-vous pour une précision de ±5% à 95% de niveau de confiance (formule de Cochran) ? Calculez le résultat numérique.</div>
+      <textarea class="answer-area" id="q9c" placeholder="Votre réponse ici…" rows="6"></textarea>
+    </div>
+    <div class="sub-question">
+      <div class="sub-q-label">d)</div>
+      <div class="sub-q-text">Quelles sont les <strong>limites de votre approche</strong> ? Proposez deux améliorations méthodologiques en utilisant des données complémentaires (<em>LiDAR, radar, hyperspectral</em>) en les justifiant.</div>
+      <textarea class="answer-area" id="q9d" placeholder="Votre réponse ici…" rows="5"></textarea>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ FOOTER ══ -->
+  <div class="exam-footer no-print" id="exam-footer">
+    <div class="footer-label">Soumettre l'examen</div>
+    <div class="footer-note" id="answered-count">Vérifiez que toutes vos réponses sont renseignées avant de soumettre.</div>
+
+    <div class="confirm-panel" id="confirm-panel">
+      <div class="confirm-title">✓ Examen soumis avec succès</div>
+      <div class="confirm-sub">Vos réponses ont été enregistrées et transmises au département.</div>
+    </div>
+
+    <button class="btn-submit" id="btn-submit" onclick="submitExam()">
+      🛰 Soumettre l'examen
+    </button>
+
+    <div class="email-status" id="email-status"></div>
+  </div>
+
+  <div class="closing-banner">
+    🛰 Bon courage ! La rigueur et la méthode font la différence.
+  </div>
+
+</div><!-- .exam-wrapper -->
+
+<!-- STICKY BAR -->
+<div class="sticky-bar no-print">
+  <div class="sticky-progress" id="sticky-progress"></div>
+  <div style="opacity:0.7">Télédétection Avancée — M1 Géodésie</div>
+  <div class="sticky-timer" id="sticky-timer">⏱ <span id="timer-display">01:30:00</span></div>
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   SÉCURITÉ — Copier-coller & sortie de page
+════════════════════════════════════════ */
+
+// 1. Bloquer copier, coller, couper partout
+document.addEventListener('copy',  e => { e.preventDefault(); });
+document.addEventListener('paste', e => { e.preventDefault(); });
+document.addEventListener('cut',   e => { e.preventDefault(); });
+
+// Autoriser le coller uniquement dans les textareas (pour la saisie clavier normale)
+// Note : le blocage global empêche coller depuis presse-papier externe
+document.querySelectorAll('textarea').forEach(ta => {
+  ta.addEventListener('paste', e => e.preventDefault()); // bloquer coller dans textarea aussi
+});
+
+// 2. Bloquer clic droit
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// 3. Bloquer touches clavier dangereuses (Ctrl+C / Ctrl+V / Ctrl+A / F12 / etc.)
+document.addEventListener('keydown', e => {
+  const ctrl = e.ctrlKey || e.metaKey;
+  if (ctrl && ['c','v','x','a','u','s','p'].includes(e.key.toLowerCase())) {
+    e.preventDefault();
+    return false;
+  }
+  if (e.key === 'F12' || (ctrl && e.shiftKey && e.key === 'I')) {
+    e.preventDefault();
+    return false;
+  }
+  if (e.key === 'PrintScreen') {
+    e.preventDefault();
+    return false;
+  }
+});
+
+// 4. Détection sortie de page (visibilité) + changement de fenêtre
+let tabSwitchCount = 0;
+
+function showFocusOverlay() {
+  if (submitted) return;
+  tabSwitchCount++;
+  document.getElementById('warn-count').textContent =
+    `Incident(s) enregistré(s) : ${tabSwitchCount}`;
+  document.getElementById('focus-overlay').classList.add('show');
+}
+
+function closeFocusOverlay() {
+  document.getElementById('focus-overlay').classList.remove('show');
+}
+
+// Visibilité (onglet mis en arrière-plan)
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) showFocusOverlay();
+});
+
+// Perte de focus de la fenêtre
+window.addEventListener('blur', () => {
+  if (document.hidden) return; // déjà géré
+  showFocusOverlay();
+});
+
+/* ════════════════════════════════════════
+   TIMER — 1h30
+════════════════════════════════════════ */
+let totalSeconds = 90 * 60;
+const timerEl  = document.getElementById('timer-display');
+const timerBox = document.getElementById('sticky-timer');
+
+const timerInt = setInterval(() => {
+  if (totalSeconds <= 0) {
+    clearInterval(timerInt);
+    timerEl.textContent = '00:00:00';
+    timerBox.className = 'sticky-timer danger';
+    autoSubmit();
+    return;
+  }
+  totalSeconds--;
+  const h = String(Math.floor(totalSeconds / 3600)).padStart(2,'0');
+  const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,'0');
+  const s = String(totalSeconds % 60).padStart(2,'0');
+  timerEl.textContent = `${h}:${m}:${s}`;
+  if      (totalSeconds <= 300) timerBox.className = 'sticky-timer danger';
+  else if (totalSeconds <= 900) timerBox.className = 'sticky-timer warn';
+}, 1000);
+
+/* ════════════════════════════════════════
+   PROGRESS
+════════════════════════════════════════ */
+const textareaIds = [
+  'q1a','q1b','q1c','q2a','q2b','q3a','q3b',
+  'q4a','q4b','q5a','q5b','q5c','q6a','q6b','q6c',
+  'q7a','q7b','q8a','q8b','q9a','q9b','q9c','q9d'
+];
+const TOTAL = textareaIds.length;
+
+function countFilled() {
+  return textareaIds.filter(id => document.getElementById(id).value.trim().length > 0).length;
+}
+function updateProgress() {
+  const filled = countFilled();
+  document.getElementById('sticky-progress').style.width = (filled / TOTAL * 100) + '%';
+  document.getElementById('answered-count').textContent =
+    `${filled} / ${TOTAL} zones de réponse renseignées`;
+}
+textareaIds.forEach(id => document.getElementById(id).addEventListener('input', updateProgress));
+
+/* ════════════════════════════════════════
+   SUBMIT
+════════════════════════════════════════ */
+let submitted = false;
+
+function submitExam(auto = false) {
+  if (submitted) return;
+
+  const nom       = document.getElementById('student-nom').value.trim();
+  const prenom    = document.getElementById('student-prenom').value.trim();
+  const matricule = document.getElementById('student-matricule').value.trim();
+
+  // Validation obligatoire (sauf si auto)
+  if (!auto) {
+    let formOk = true;
+    ['student-nom','student-prenom','student-matricule'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) { el.classList.add('error'); formOk = false; }
+      else el.classList.remove('error');
+    });
+    if (!formOk) {
+      alert('⚠ Veuillez remplir vos informations étudiant (Nom, Prénom, Matricule) avant de soumettre.');
+      document.getElementById('student-nom').scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+  }
+
+  submitted = true;
+  clearInterval(timerInt);
+
+  // Verrouiller tous les champs
+  textareaIds.forEach(id => {
+    document.getElementById(id).disabled = true;
+  });
+  ['student-nom','student-prenom','student-matricule'].forEach(id => {
+    document.getElementById(id).disabled = true;
+  });
+
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('confirm-panel').classList.add('show');
+
+  // Collecter les réponses
+  const reponses = textareaIds.map(id => {
+    const val = document.getElementById(id).value.trim();
+    return `[${id.toUpperCase()}] ${val || '(Sans réponse)'}`;
+  }).join('\n\n');
+
+  document.getElementById('exam-footer').scrollIntoView({ behavior:'smooth', block:'center' });
+
+  sendResults({
+    nom:       nom || '(Non renseigné)',
+    prenom:    prenom || '(Non renseigné)',
+    matricule: matricule || '(Non renseigné)',
+    reponses,
+    auto
+  });
+}
+
+function autoSubmit() {
+  if (!submitted) {
+    document.getElementById('focus-overlay').classList.remove('show');
+    submitExam(true);
+  }
+}
+
+/* ════════════════════════════════════════
+   EMAIL
+════════════════════════════════════════ */
+async function sendResults({ nom, prenom, matricule, reponses, auto }) {
+  const statusEl = document.getElementById('email-status');
+  statusEl.className = 'email-status sending';
+  statusEl.textContent = '⏳ Envoi des réponses au département…';
+
+  const now     = new Date();
+  const dateStr = now.toLocaleDateString('fr-DZ', {
+    weekday:'long', year:'numeric', month:'long', day:'numeric',
+    hour:'2-digit', minute:'2-digit'
+  });
+
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email:  DEST_EMAIL,
+      nom, prenom, matricule,
+      module:    'Télédétection Avancée — Master 1',
+      reponses,
+      date:      dateStr,
+      incidents: tabSwitchCount > 0 ? `⚠ ${tabSwitchCount} sortie(s) de page détectée(s)` : 'Aucun incident',
+      soumission: auto ? 'Automatique (temps écoulé)' : 'Manuelle'
+    });
+    statusEl.className = 'email-status success';
+    statusEl.textContent = '✓ Réponses envoyées au département avec succès. Vous pouvez fermer cette page.';
+
+    // Fermer la page automatiquement après 4 secondes
+    setTimeout(() => {
+      document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+          min-height:100vh;background:#0a0f1e;color:#f5f0e8;font-family:'IBM Plex Mono',monospace;
+          text-align:center;padding:2rem;gap:1.2rem;">
+          <div style="font-size:2rem;">🛰</div>
+          <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:#6ab0ff;">
+            Examen terminé
+          </div>
+          <div style="font-size:0.8rem;opacity:0.7;letter-spacing:0.1em;text-transform:uppercase;">
+            Vos réponses ont été transmises au département.<br>
+            Merci et bon courage pour la suite.
+          </div>
+          <div style="font-size:0.7rem;color:#555;margin-top:1rem;">
+            ${nom} ${prenom} — ${matricule} — ${dateStr}
+          </div>
+        </div>`;
+    }, 4000);
+
+  } catch (err) {
+    console.error('EmailJS error:', err);
+    statusEl.className = 'email-status error';
+    statusEl.textContent = '✗ Échec de l\'envoi. (' + (err.text || err.message || err) + ')';
+  }
+}
+
+updateProgress();
+</script>
+</body>
+</html>
