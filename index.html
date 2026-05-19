@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Examen Final — Télédétection Avancée | Master 1 Géodésie & Cartographie</title>
+<title>Examen Final — Télédétection Avancée | Master 1 Géodésie & Cartographie — USTHB</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Literata:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
@@ -14,11 +14,12 @@
     --accent2: #c8401a;
     --rule: #c4bfb0;
     --highlight: #e8dfc8;
+    --geo-teal: #0d6e6e;
+    --geo-light: #eaf5f5;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* Bloquer la sélection de texte partout sauf dans les zones de réponse */
   body {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -55,46 +56,152 @@
   .exam-header {
     background: var(--ink);
     color: var(--paper);
-    padding: 2.5rem 3rem 2rem;
+    padding: 0;
     position: relative;
     overflow: hidden;
     margin-bottom: 0;
   }
+
+  /* Bande décorative satellitaire en haut */
+  .header-geo-stripe {
+    height: 6px;
+    background: linear-gradient(90deg,
+      var(--geo-teal) 0%,
+      #1aa8aa 30%,
+      var(--accent) 60%,
+      var(--accent2) 100%
+    );
+  }
+
   .exam-header::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background: repeating-linear-gradient(45deg, transparent, transparent 8px,
-      rgba(26,58,143,0.15) 8px, rgba(26,58,143,0.15) 9px);
+      rgba(26,58,143,0.12) 8px, rgba(26,58,143,0.12) 9px);
+    pointer-events: none;
   }
-  .header-top {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    position: relative; z-index: 1;
-    margin-bottom: 1.5rem; padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(245,240,232,0.2);
+
+  /* Décoration satellitaire */
+  .header-wave-deco {
+    position: absolute;
+    right: -20px; top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.06;
+    font-size: 11rem;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
   }
-  .uni-info {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    letter-spacing: 0.08em; line-height: 1.8; opacity: 0.75; text-transform: uppercase;
+
+  .header-inner {
+    padding: 2rem 3rem 2rem;
+    position: relative;
+    z-index: 1;
   }
-  .exam-meta {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    text-align: right; line-height: 1.8; opacity: 0.75;
+
+  /* ── BLOC INSTITUTION ── */
+  .header-institution {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.4rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(245,240,232,0.18);
+    gap: 1rem;
   }
-  .exam-title { position: relative; z-index: 1; }
-  .exam-title h1 {
-    font-family: 'Syne', sans-serif; font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.4rem;
+
+  .institution-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
   }
-  .exam-title h1 span { color: #6ab0ff; }
-  .exam-title .subtitle {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-    letter-spacing: 0.12em; opacity: 0.7; text-transform: uppercase;
+
+  .inst-line {
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.07em;
+    line-height: 1.6;
+    text-transform: uppercase;
   }
-  .score-badge {
-    display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.2rem;
-    background: var(--accent2); color: white; padding: 0.4rem 1rem;
-    font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.05em;
+  .inst-line-1 {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6ab0ff;
+    letter-spacing: 0.12em;
   }
+  .inst-line-2 {
+    font-size: 0.65rem;
+    opacity: 0.65;
+    color: #c8deff;
+  }
+  .inst-line-3 {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--geo-teal);
+    filter: brightness(1.8);
+    letter-spacing: 0.1em;
+    margin-top: 0.2rem;
+  }
+  .inst-divider {
+    width: 28px; height: 1px;
+    background: rgba(245,240,232,0.3);
+    margin: 0.4rem 0;
+  }
+  .inst-line-4 {
+    font-size: 0.6rem;
+    opacity: 0.55;
+    color: #aac8ff;
+  }
+
+  .institution-right {
+    text-align: right;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.63rem;
+    letter-spacing: 0.07em;
+    line-height: 2;
+    opacity: 0.7;
+    color: #d8e8f5;
+  }
+
+  /* ── TITRE EXAMEN ── */
+  .exam-title-block h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.5rem, 3.8vw, 2.3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+    color: var(--paper);
+  }
+  .exam-title-block h1 span.hl  { color: #6ab0ff; }
+  .exam-title-block h1 span.hl2 { color: #7de8ea; }
+  .exam-subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    opacity: 0.65;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .header-badges {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 0.8rem;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.85rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge-score { background: var(--accent2); color: white; }
+  .badge-dept  { background: var(--geo-teal); color: white; }
+  .badge-year  { background: rgba(255,255,255,0.1); color: #c8deff; border: 1px solid rgba(255,255,255,0.2); font-weight: 500; font-size: 0.7rem; }
 
   /* ── INSTRUCTIONS ── */
   .instructions {
@@ -200,6 +307,18 @@
   .context-box ul { padding-left: 1.2rem; margin-top: 0.4rem; }
   .context-box li { margin-bottom: 0.2rem; }
 
+  /* Geo context box */
+  .geo-context-box {
+    background: var(--geo-light); border: 1px solid #9de0e2; border-left: 4px solid var(--geo-teal);
+    padding: 1rem 1.2rem; margin-bottom: 1rem; font-size: 0.85rem; line-height: 1.7;
+  }
+  .geo-context-box::before {
+    content: 'DONNÉES SATELLITAIRES'; font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.15em; color: var(--geo-teal); display: block; font-weight: 600; margin-bottom: 0.5rem;
+  }
+  .geo-context-box ul { padding-left: 1.2rem; margin-top: 0.4rem; }
+  .geo-context-box li { margin-bottom: 0.2rem; }
+
   /* ── FOOTER / SUBMIT ── */
   .exam-footer {
     background: var(--paper); border: 1px solid var(--rule); padding: 2rem 2rem 1.8rem;
@@ -223,7 +342,137 @@
   .btn-submit:active { transform: translateY(0); }
   .btn-submit:disabled { background: #8898c4; cursor: not-allowed; transform: none; }
 
-  /* ── EMAIL STATUS ── */
+  /* ── SUBMIT LOADER ── */
+  .submit-loader-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(10,15,30,0.96);
+    z-index: 99999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    text-align: center;
+    padding: 2rem;
+  }
+  .submit-loader-overlay.show { display: flex; }
+
+  .loader-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #f5f0e8;
+    letter-spacing: -0.01em;
+  }
+  .loader-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: #aaa;
+    letter-spacing: 0.08em;
+    max-width: 360px;
+    line-height: 1.7;
+  }
+  .loader-bar-track {
+    width: 320px;
+    max-width: 90%;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .loader-bar-fill {
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #6ab0ff, transparent);
+    animation: loader-slide 1.4s ease-in-out infinite;
+  }
+  @keyframes loader-slide {
+    0%   { left: -60%; }
+    100% { left: 110%; }
+  }
+
+  .loader-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: left;
+    width: 320px;
+    max-width: 90%;
+  }
+  .loader-step {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: #555;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: color 0.4s;
+  }
+  .loader-step.done   { color: #4dc87a; }
+  .loader-step.active { color: #6ab0ff; }
+  .step-icon { width: 14px; text-align: center; flex-shrink: 0; }
+
+  .loader-success {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+  .loader-success.show { display: flex; }
+  .loader-success-icon { font-size: 2.5rem; }
+  .loader-success-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #4dc87a;
+  }
+  .loader-success-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: #888;
+    letter-spacing: 0.07em;
+    max-width: 380px;
+    line-height: 1.8;
+  }
+
+  .loader-error {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+  .loader-error.show { display: flex; }
+  .loader-error-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent2);
+  }
+  .loader-error-info {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    color: #888;
+    letter-spacing: 0.05em;
+    max-width: 360px;
+    line-height: 1.7;
+  }
+  .loader-error-detail {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: #c8401a;
+    background: rgba(200,64,26,0.1);
+    padding: 0.4rem 0.8rem;
+    border: 1px solid rgba(200,64,26,0.3);
+    max-width: 360px;
+    word-break: break-all;
+  }
+
+  /* ── EMAIL STATUS (inline) ── */
   .email-status {
     display: none; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
     letter-spacing: 0.06em; padding: 0.7rem 1.4rem; border: 1px solid;
@@ -312,32 +561,81 @@ window.addEventListener('load', () => {
 <!-- ── OVERLAY SORTIE DE PAGE ── -->
 <div class="focus-overlay" id="focus-overlay">
   <h2>⚠ Quitter l'examen est interdit</h2>
-  <p>Vous avez quitté la fenêtre de l'examen. Cet incident est enregistré.<br>
+  <p>Vous avez quitté la fenêtre de l'examen. Cet incident est enregistré et sera transmis avec votre copie.<br>
   Revenez immédiatement sur la page pour continuer.</p>
   <div class="warn-count" id="warn-count"></div>
   <button onclick="closeFocusOverlay()">Retourner à l'examen</button>
 </div>
 
+<!-- ── SUBMIT LOADER OVERLAY ── -->
+<div class="submit-loader-overlay" id="submit-loader">
+  <div id="loader-sending">
+    <div class="loader-title">Envoi en cours…</div>
+    <div class="loader-sub">Vos réponses sont transmises au Département de Géodésie & Cartographie — USTHB.</div>
+    <div class="loader-bar-track"><div class="loader-bar-fill"></div></div>
+    <div class="loader-steps">
+      <div class="loader-step" id="step1"><span class="step-icon">⟳</span> Compilation des réponses</div>
+      <div class="loader-step" id="step2"><span class="step-icon">○</span> Connexion au serveur de messagerie</div>
+      <div class="loader-step" id="step3"><span class="step-icon">○</span> Envoi au département</div>
+      <div class="loader-step" id="step4"><span class="step-icon">○</span> Confirmation d'enregistrement</div>
+    </div>
+  </div>
+
+  <div class="loader-success" id="loader-success">
+    <div class="loader-success-icon">✓</div>
+    <div class="loader-success-title">Examen soumis avec succès</div>
+    <div class="loader-success-info" id="loader-success-info"></div>
+  </div>
+
+  <div class="loader-error" id="loader-error">
+    <div style="font-size:2rem;">✗</div>
+    <div class="loader-error-title">Échec de l'envoi</div>
+    <div class="loader-error-info">Une erreur est survenue lors de la transmission. Veuillez informer votre enseignant immédiatement.</div>
+    <div class="loader-error-detail" id="loader-error-detail"></div>
+  </div>
+</div>
+
 <div class="exam-wrapper">
 
-  <!-- HEADER -->
+  <!-- ══ HEADER ══ -->
   <div class="exam-header">
-    <div class="header-top">
-      <div class="uni-info">
-        Université — Département de Géodésie & Cartographie<br>
-        Année universitaire 2024–2025<br>
-        Master 1 — Géodésie et Cartographie
+    <div class="header-geo-stripe"></div>
+    <div class="header-wave-deco">🛰</div>
+    <div class="header-inner">
+
+      <!-- Bloc institution -->
+      <div class="header-institution">
+        <div class="institution-left">
+          <div class="inst-line inst-line-1">USTHB — Université des Sciences et de la Technologie Houari Boumédiène</div>
+          <div class="inst-line inst-line-2">Bab Ezzouar — Alger — République Algérienne Démocratique et Populaire</div>
+          <div class="inst-divider"></div>
+          <div class="inst-line inst-line-1" style="color:#7de8ea;font-size:0.74rem;">Faculté des Sciences de la Terre, Géographie &amp; Aménagement du Territoire</div>
+          <div class="inst-line inst-line-2" style="font-size:0.62rem;">FSTGAT — Faculté des Sciences de la Terre</div>
+          <div class="inst-divider"></div>
+          <div class="inst-line inst-line-3">Département de Géodésie &amp; Cartographie</div>
+          <div class="inst-line inst-line-4">Master 1 — Géodésie et Cartographie · Année universitaire 2024–2025</div>
+        </div>
+        <div class="institution-right">
+          Durée : 1h 30 min<br>
+          Documents : non autorisés<br>
+          Calculatrice : autorisée<br>
+          <br>
+          Session : Juin 2025<br>
+          Semestre : 2
+        </div>
       </div>
-      <div class="exam-meta">
-        Durée : 1h 30 min<br>
-        Documents : non autorisés<br>
-        Calculatrice : autorisée
+
+      <!-- Titre -->
+      <div class="exam-title-block">
+        <h1>Télédétection <span class="hl">&amp; Traitement</span><br>d'Images <span class="hl2">Satellitaires</span></h1>
+        <div class="exam-subtitle">Examen Final — Niveau Avancé — Master 1 Géodésie &amp; Cartographie</div>
+        <div class="header-badges">
+          <div class="badge badge-score">🛰 Noté sur 20 points</div>
+          <div class="badge badge-dept">🗺 Dép. Géodésie &amp; Carto</div>
+          <div class="badge badge-year">2024 – 2025</div>
+        </div>
       </div>
-    </div>
-    <div class="exam-title">
-      <h1>Télédétection <span>&amp; Traitement</span><br>d'Images Satellitaires</h1>
-      <div class="subtitle">Examen Final — Niveau Avancé — Master 1</div>
-      <div class="score-badge">🛰 Noté sur 20 points</div>
+
     </div>
   </div>
 
@@ -348,7 +646,7 @@ window.addEventListener('load', () => {
       <li>Les <strong>formules mathématiques</strong> doivent être justifiées.</li>
       <li>Toute réponse non justifiée sera pénalisée.</li>
       <li><strong>Documents et équipements électroniques</strong> strictement interdits.</li>
-      <li>Le copier-coller est <strong>désactivé</strong>. Toute sortie de la page est <strong>enregistrée et signalée</strong>.</li>
+      <li>Le copier-coller est <strong>désactivé</strong>. Toute sortie de la page est <strong>enregistrée et transmise avec votre copie</strong>.</li>
       <li>À la fin du temps imparti, l'examen est <strong>soumis automatiquement</strong>.</li>
     </ul>
   </div>
@@ -533,7 +831,7 @@ window.addEventListener('load', () => {
   <div class="question-group">
     <div class="q-header">
       <div class="q-number-badge">Q7</div>
-      <div class="q-title">Changement détection et analyse multi-temporelle</div>
+      <div class="q-title">Détection de changement et analyse multi-temporelle</div>
       <div class="q-pts">2 pts</div>
     </div>
     <div class="sub-question">
@@ -574,7 +872,7 @@ window.addEventListener('load', () => {
       <div class="q-title">Étude de cas — Analyse critique</div>
       <div class="q-pts">3 pts</div>
     </div>
-    <div class="context-box">
+    <div class="geo-context-box">
       Un bureau d'études est chargé de surveiller l'<strong>évolution du couvert forestier</strong> dans une région montagneuse d'Algérie (wilaya de Tizi Ouzou) sur la période <strong>2000–2023</strong>. Il dispose des données suivantes :
       <ul>
         <li>Images <strong>Landsat 5 TM</strong> (2000, 2005), <strong>Landsat 8 OLI</strong> (2013, 2018), <strong>Sentinel-2 MSI</strong> (2019, 2023)</li>
@@ -612,7 +910,7 @@ window.addEventListener('load', () => {
 
     <div class="confirm-panel" id="confirm-panel">
       <div class="confirm-title">✓ Examen soumis avec succès</div>
-      <div class="confirm-sub">Vos réponses ont été enregistrées et transmises au département.</div>
+      <div class="confirm-sub">Vos réponses ont été enregistrées et transmises au Département de Géodésie &amp; Cartographie — USTHB.</div>
     </div>
 
     <button class="btn-submit" id="btn-submit" onclick="submitExam()">
@@ -623,7 +921,7 @@ window.addEventListener('load', () => {
   </div>
 
   <div class="closing-banner">
-    🛰 Bon courage ! La rigueur et la méthode font la différence.
+    🗺 Département de Géodésie &amp; Cartographie — FSTGAT — USTHB · Bon courage ! La rigueur et la méthode font la différence.
   </div>
 
 </div><!-- .exam-wrapper -->
@@ -631,7 +929,7 @@ window.addEventListener('load', () => {
 <!-- STICKY BAR -->
 <div class="sticky-bar no-print">
   <div class="sticky-progress" id="sticky-progress"></div>
-  <div style="opacity:0.7">Télédétection Avancée — M1 Géodésie</div>
+  <div style="opacity:0.7">Télédétection Avancée — M1 Géodésie &amp; Cartographie · USTHB</div>
   <div class="sticky-timer" id="sticky-timer">⏱ <span id="timer-display">01:30:00</span></div>
 </div>
 
@@ -640,21 +938,16 @@ window.addEventListener('load', () => {
    SÉCURITÉ — Copier-coller & sortie de page
 ════════════════════════════════════════ */
 
-// 1. Bloquer copier, coller, couper partout
 document.addEventListener('copy',  e => { e.preventDefault(); });
 document.addEventListener('paste', e => { e.preventDefault(); });
 document.addEventListener('cut',   e => { e.preventDefault(); });
 
-// Autoriser le coller uniquement dans les textareas (pour la saisie clavier normale)
-// Note : le blocage global empêche coller depuis presse-papier externe
 document.querySelectorAll('textarea').forEach(ta => {
-  ta.addEventListener('paste', e => e.preventDefault()); // bloquer coller dans textarea aussi
+  ta.addEventListener('paste', e => e.preventDefault());
 });
 
-// 2. Bloquer clic droit
 document.addEventListener('contextmenu', e => e.preventDefault());
 
-// 3. Bloquer touches clavier dangereuses (Ctrl+C / Ctrl+V / Ctrl+A / F12 / etc.)
 document.addEventListener('keydown', e => {
   const ctrl = e.ctrlKey || e.metaKey;
   if (ctrl && ['c','v','x','a','u','s','p'].includes(e.key.toLowerCase())) {
@@ -671,7 +964,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// 4. Détection sortie de page (visibilité) + changement de fenêtre
 let tabSwitchCount = 0;
 let tabReturnCount = 0;
 
@@ -685,17 +977,17 @@ function showFocusOverlay() {
 
 function closeFocusOverlay() {
   tabReturnCount++;
+  document.getElementById('warn-count').textContent =
+    `Sorties enregistrées : ${tabSwitchCount} | Retours enregistrés : ${tabReturnCount}`;
   document.getElementById('focus-overlay').classList.remove('show');
 }
 
-// Visibilité (onglet mis en arrière-plan)
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) showFocusOverlay();
 });
 
-// Perte de focus de la fenêtre
 window.addEventListener('blur', () => {
-  if (document.hidden) return; // déjà géré
+  if (document.hidden) return;
   showFocusOverlay();
 });
 
@@ -756,7 +1048,6 @@ function submitExam(auto = false) {
   const prenom    = document.getElementById('student-prenom').value.trim();
   const matricule = document.getElementById('student-matricule').value.trim();
 
-  // Validation obligatoire (sauf si auto)
   if (!auto) {
     let formOk = true;
     ['student-nom','student-prenom','student-matricule'].forEach(id => {
@@ -774,7 +1065,6 @@ function submitExam(auto = false) {
   submitted = true;
   clearInterval(timerInt);
 
-  // Verrouiller tous les champs
   textareaIds.forEach(id => {
     document.getElementById(id).disabled = true;
   });
@@ -785,13 +1075,19 @@ function submitExam(auto = false) {
   document.getElementById('btn-submit').disabled = true;
   document.getElementById('confirm-panel').classList.add('show');
 
-  // Collecter les réponses
   const reponses = textareaIds.map(id => {
     const val = document.getElementById(id).value.trim();
     return `[${id.toUpperCase()}] ${val || '(Sans réponse)'}`;
   }).join('\n\n');
 
-  document.getElementById('exam-footer').scrollIntoView({ behavior:'smooth', block:'center' });
+  // Afficher le loader
+  document.getElementById('submit-loader').classList.add('show');
+
+  const now     = new Date();
+  const dateStr = now.toLocaleDateString('fr-DZ', {
+    weekday:'long', year:'numeric', month:'long', day:'numeric',
+    hour:'2-digit', minute:'2-digit'
+  });
 
   sendResults({
     nom:       nom || '(Non renseigné)',
@@ -800,7 +1096,8 @@ function submitExam(auto = false) {
     reponses,
     auto,
     sorties:   tabSwitchCount,
-    retours:   tabReturnCount
+    retours:   tabReturnCount,
+    dateStr
   });
 }
 
@@ -812,58 +1109,108 @@ function autoSubmit() {
 }
 
 /* ════════════════════════════════════════
+   LOADER STEPS ANIMATION
+════════════════════════════════════════ */
+function animateStep(stepId, state) {
+  const el = document.getElementById(stepId);
+  const icon = el.querySelector('.step-icon');
+  el.className = 'loader-step ' + state;
+  if (state === 'done')   icon.textContent = '✓';
+  if (state === 'active') icon.textContent = '⟳';
+}
+
+async function runLoaderAnimation() {
+  animateStep('step1', 'active');
+  await delay(800);
+  animateStep('step1', 'done');
+  animateStep('step2', 'active');
+  await delay(700);
+  animateStep('step2', 'done');
+  animateStep('step3', 'active');
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ════════════════════════════════════════
    EMAIL
 ════════════════════════════════════════ */
-async function sendResults({ nom, prenom, matricule, reponses, auto, sorties, retours }) {
-  const statusEl = document.getElementById('email-status');
-  statusEl.className = 'email-status sending';
-  statusEl.textContent = '⏳ Envoi des réponses au département…';
+async function sendResults({ nom, prenom, matricule, reponses, auto, sorties, retours, dateStr }) {
 
-  const now     = new Date();
-  const dateStr = now.toLocaleDateString('fr-DZ', {
-    weekday:'long', year:'numeric', month:'long', day:'numeric',
-    hour:'2-digit', minute:'2-digit'
-  });
+  await runLoaderAnimation();
 
   try {
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       to_email:  DEST_EMAIL,
       nom, prenom, matricule,
-      module:    'Télédétection Avancée — Master 1',
+      groupe:    sorties > 0
+        ? `⚠ ${sorties} sortie(s) de page | ${retours} retour(s)`
+        : '✓ Aucune sortie détectée',
+      module:    'Télédétection Avancée — M1 Géodésie & Cartographie — USTHB/FSTGAT',
       reponses,
       date:      dateStr,
-      incidents: sorties > 0
-        ? `⚠ ${sorties} sortie(s) de page | ${retours} retour(s) sur la page`
-        : 'Aucun incident',
       soumission: auto ? 'Automatique (temps écoulé)' : 'Manuelle'
     });
-    statusEl.className = 'email-status success';
-    statusEl.textContent = '✓ Réponses envoyées au département avec succès. Vous pouvez fermer cette page.';
 
-    // Fermer la page automatiquement après 4 secondes
+    animateStep('step3', 'done');
+    animateStep('step4', 'active');
+    await delay(600);
+    animateStep('step4', 'done');
+    await delay(400);
+
+    document.getElementById('loader-sending').style.display = 'none';
+
+    const incidentTxt = sorties > 0
+      ? `⚠ Incidents enregistrés : ${sorties} sortie(s) · ${retours} retour(s)`
+      : '✓ Aucun incident de navigation';
+
+    document.getElementById('loader-success-info').innerHTML =
+      `${nom} ${prenom} — Matricule : ${matricule}<br>
+       Dép. Géodésie & Cartographie · FSTGAT · USTHB<br><br>
+       ${incidentTxt}<br><br>
+       <span style="color:#666">${dateStr}</span>`;
+
+    document.getElementById('loader-success').classList.add('show');
+
     setTimeout(() => {
       document.body.innerHTML = `
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
           min-height:100vh;background:#0a0f1e;color:#f5f0e8;font-family:'IBM Plex Mono',monospace;
-          text-align:center;padding:2rem;gap:1.2rem;">
-          <div style="font-size:2rem;">🛰</div>
+          text-align:center;padding:2rem;gap:1.4rem;">
+          <div style="font-size:2.2rem;">🛰</div>
           <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:#6ab0ff;">
             Examen terminé
           </div>
-          <div style="font-size:0.8rem;opacity:0.7;letter-spacing:0.1em;text-transform:uppercase;">
-            Vos réponses ont été transmises au département.<br>
+          <div style="font-size:0.78rem;opacity:0.65;letter-spacing:0.1em;text-transform:uppercase;line-height:2;">
+            Département de Géodésie & Cartographie · FSTGAT · USTHB<br>
+            Télédétection Avancée — M1 Géodésie & Cartographie<br>
+            Vos réponses ont été transmises avec succès.
+          </div>
+          <div style="font-size:0.7rem;color:#555;margin-top:0.5rem;line-height:1.8;">
+            ${nom} ${prenom} — ${matricule}<br>
+            ${dateStr}<br>
+            ${sorties > 0 ? `⚠ ${sorties} sortie(s) enregistrée(s)` : '✓ Aucun incident'}
+          </div>
+          <div style="font-size:0.65rem;color:#333;margin-top:1rem;font-style:italic;">
             Merci et bon courage pour la suite.
           </div>
-          <div style="font-size:0.7rem;color:#555;margin-top:1rem;">
-            ${nom} ${prenom} — ${matricule} — ${dateStr}
-          </div>
         </div>`;
-    }, 4000);
+    }, 5000);
 
   } catch (err) {
     console.error('EmailJS error:', err);
+
+    animateStep('step3', 'done');
+    animateStep('step4', 'active');
+    await delay(300);
+
+    document.getElementById('loader-sending').style.display = 'none';
+    document.getElementById('loader-error-detail').textContent =
+      err.text || err.message || JSON.stringify(err);
+    document.getElementById('loader-error').classList.add('show');
+
+    const statusEl = document.getElementById('email-status');
     statusEl.className = 'email-status error';
-    statusEl.textContent = '✗ Échec de l\'envoi. (' + (err.text || err.message || err) + ')';
+    statusEl.textContent = '✗ Échec de l\'envoi. Informez votre enseignant. (' + (err.text || err.message || err) + ')';
   }
 }
 
